@@ -7,13 +7,13 @@ sys.path.append('.')
 from got10k.experiments import *
 
 from siamfc import TrackerCombined
-from patchnet import PatchNetv3
+from patchnet import PatchNet
 
 
 if __name__ == '__main__':
     net_path = 'pretrained/siamfc_alexnet_e50.pth'
-    patchnet_path = 'ckpt/v3_all/patchnet_1.pth'
-    patchnet = PatchNetv3()
+    patchnet_path = 'pretrained/patchnet.pth'
+    patchnet = PatchNet()
     patchnet.create_architecture()
     patchnet.load_state_dict(torch.load(patchnet_path))
     patchnet.eval()

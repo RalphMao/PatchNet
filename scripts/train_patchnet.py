@@ -4,8 +4,8 @@ import os
 import sys
 import argparse
 import torch
-sys.path.append('.')
 from got10k.datasets import *
+sys.path.append('.')
 
 from siamfc import TrackerPatchNet
 

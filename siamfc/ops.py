@@ -28,7 +28,7 @@ def read_image(img_file, cvt_code=cv2.COLOR_BGR2RGB):
 
 
 def show_image(img, boxes=None, scores=None, box_fmt='ltwh', colors=None,
-               thickness=1, fig_n=1, delay=1, visualize=True,
+               thickness=1, fig_n=1, delay=100, visualize=True,
                cvt_code=cv2.COLOR_RGB2BGR):
     if cvt_code is not None:
         img = cv2.cvtColor(img, cvt_code)
@@ -86,12 +86,10 @@ def show_image(img, boxes=None, scores=None, box_fmt='ltwh', colors=None,
                             color, 1)
     
     if visualize:
-        '''
-        winname = 'window_{}'.format(fig_n)
+        winname = 'window'
         cv2.imshow(winname, img)
         cv2.waitKey(delay)
-        '''
-        cv2.imwrite("im/%05d.png"%fig_n, img)
+        # cv2.imwrite("im/%05d.png"%fig_n, img)
 
     return img
 

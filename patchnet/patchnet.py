@@ -12,7 +12,7 @@ from .fourier_feature import FourierFeature, FeatureContrast
 from .pool_select import MaxPoolSoftSelect
 from .utils import find_peaks, cuttop, tile2d, conv2gconv
 
-__all__ = ["PatchNet", "PatchAggregate"]
+__all__ = ["PatchNet", "PatchNetG", "PatchAggregate"]
 
 def crop_pool(bottom, rois, pool_size, feat_stride=1.0):
     rois = rois.detach()

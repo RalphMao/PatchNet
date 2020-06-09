@@ -22,7 +22,7 @@ from .datasets import Pair
 from .transforms import SiamFCTransforms
 
 
-__all__ = ['TrackerSiamFC', 'TrackerSiamWithPatch', 'VariablePatchSiam', 'VariableMultiPatchSiam']
+__all__ = ['TrackerSiamFC', 'FixedPatchSiam', 'VariablePatchSiam']
 
 
 class Net(nn.Module):
@@ -338,7 +338,7 @@ class TrackerSiamFC(Tracker):
         
         return self.labels
 
-class TrackerSiamWithPatch(TrackerSiamFC):
+class FixedPatchSiam(TrackerSiamFC):
     def __init__(self, net_path, patchnet, interval, pscale_lr=0.25, **kwargs):
         self.patchnet = patchnet
         self.interval = interval
@@ -469,92 +469,6 @@ class VariablePatchSiam(TrackerSiamFC):
             self.target_sz[1], self.target_sz[0]])
         corr_boxes = np.stack((self.box_ckpt, box))
         corr_boxes[0,:2] -= 1
-        corr_boxes[:,2:] += corr_boxes[:, :2]
-        corr_boxes = corr_boxes[:,None]
-
-        scores, bboxes = self.patchnet.track(imgs, corr_boxes)
-
-        if scores[0] >= self.conf:
-            self.center = (bboxes[0,:2] + bboxes[0, 2:]) / 2
-            self.center = self.center[::-1]
-            new_size = bboxes[0, 2:] - bboxes[0, :2]
-            old_size = corr_boxes[1, 0, 2:] - corr_boxes[1, 0, :2]
-            scale = np.mean(new_size / old_size)
-            scale =  (1 - self.pscale_lr) * 1.0 + \
-                self.pscale_lr * scale
-            self.target_sz *= scale
-            self.z_sz *= scale
-            self.x_sz *= scale
-
-        box = bboxes[0] + 1
-        box[2:] -= box[:2]
-        return box, scores
-
-
-class VariableMultiPatchSiam(TrackerSiamFC):
-    def __init__(self, net_path, patchnet, interval=6, conf=0.8, pscale_lr=0.25, **kwargs):
-        self.conf = conf
-        self.patchnet = patchnet
-        self.interval = interval
-        self.pscale_lr = pscale_lr
-        self.tracklen_counter = []
-        super(VariableMultiPatchSiam, self).__init__(net_path, **kwargs)
-    
-    def track(self, img_files, box, visualize=False):
-        frame_num = len(img_files)
-        boxes = np.zeros((frame_num, 4))
-        boxes[0] = box
-        times = np.zeros(frame_num)
-        refreshed_count = 0
-        tracked_len = 0
-
-        for f, img_file in enumerate(img_files):
-            img = ops.read_image(img_file)
-
-            begin = time.time()
-            if f == 0:
-                self.init(img, box)
-                self.img_ckpt = [img] * 2
-                self.box_ckpt = [boxes[f, :]] * 2
-                scores = np.ones(1)
-            elif tracked_len == self.interval:
-                boxes[f, :], _ = self.update(img)
-                scores = np.ones(1)
-                self.img_ckpt = self.img_ckpt[1:] + [img]
-                self.box_ckpt = self.box_ckpt[1:] + [boxes[f, :]]
-                tracked_len = 0
-                refreshed_count += 1
-            else:
-                boxes[f, :], scores = self.update_with_patchnet(img)
-                if scores[0] < self.conf:
-                    boxes[f, :], _ = self.update(img)
-                    self.img_ckpt = self.img_ckpt[1:] + [img]
-                    self.box_ckpt = self.box_ckpt[1:] + [boxes[f, :]]
-                    tracked_len = 0
-                    refreshed_count += 1
-                else:
-                    tracked_len += 1
-
-
-            times[f] = time.time() - begin
-
-            if visualize:
-                show_frame(img, boxes[f])
-        print("Avg track interval: %.3f"%(float(f) / refreshed_count))
-        self.tracklen_counter.append(float(f) / refreshed_count)
-
-        return boxes, times
-
-    def update_with_patchnet(self, img):
-        
-        imgs = np.stack(self.img_ckpt + [img])
-        imgs = imgs[:,:,:,::-1]
-        box = np.array([
-            self.center[1] - (self.target_sz[1] - 1) / 2,
-            self.center[0] - (self.target_sz[0] - 1) / 2,
-            self.target_sz[1], self.target_sz[0]])
-        corr_boxes = np.stack(self.box_ckpt + [box])
-        corr_boxes[:-1,:2] -= 1
         corr_boxes[:,2:] += corr_boxes[:, :2]
         corr_boxes = corr_boxes[:,None]
 

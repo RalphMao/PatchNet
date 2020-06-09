@@ -8,7 +8,7 @@ from torch.utils.data import DataLoader
 import numpy as np
 
 from got10k.trackers import Tracker
-from patchnet import PatchNetv3, PatchNetv4, PatchNetv5
+from patchnet import PatchNet
 
 from .optim import AdamSparse
 from .losses import BalancedLoss, CenterLoss
@@ -21,7 +21,7 @@ __all__ = ['TrainerPatchNet']
 class TrainerPatchNet(Tracker):
     def __init__(self):
         super(TrackerPatchNet, self).__init__(self.__class__.__name__, True)
-        self.net = PatchNetv3()
+        self.net = PatchNet()
         self.net.create_architecture()
         self.net.cuda()
         self.criterion = CenterLoss()
