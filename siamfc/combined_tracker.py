@@ -57,7 +57,7 @@ class TrackerCombined(TrackerSiamFC):
         corr_boxes[:,2:] += corr_boxes[:, :2]
         corr_boxes = corr_boxes[:,None]
 
-        images = self.patchnet.preprocess_image(imgs)
+        images = self.patchnet.preprocess_image_cuda(imgs)
         corr_boxes = torch.from_numpy(corr_boxes).float().cuda()
         base_boxes = corr_boxes[0]
         target_boxes = corr_boxes[1]
