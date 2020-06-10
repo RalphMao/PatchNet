@@ -20,7 +20,7 @@ __all__ = ['TrainerPatchNet']
 
 class TrainerPatchNet(Tracker):
     def __init__(self):
-        super(TrackerPatchNet, self).__init__(self.__class__.__name__, True)
+        super(TrainerPatchNet, self).__init__(self.__class__.__name__, True)
         self.net = PatchNet()
         self.net.create_architecture()
         self.net.cuda()
@@ -63,7 +63,7 @@ class TrainerPatchNet(Tracker):
                 drop_last=True)
 
             val_loss, val_metric = self.run_epoch(val_dataloader, train_flag=False)
-            msg = 'Epoch: {} Val Loss: {:.5f}, Accuracy {:.5f}'.format(0, val_loss, val_metric)
+            msg = 'Epoch: {} Val Loss: {:.5f}'.format(0, val_loss)
             print(msg)
             print(msg, file=flog, flush=True)
 
@@ -71,7 +71,7 @@ class TrainerPatchNet(Tracker):
 
             print('Epoch: {} Training in Progress'.format(epoch))
             train_loss, train_metric = self.run_epoch(dataloader, train_flag=True)
-            msg = 'Epoch: {} Train Loss: {:.5f}, Accuracy {:.5f}'.format(epoch, train_loss, train_metric)
+            msg = 'Epoch: {} Train Loss: {:.5f}'.format(epoch, train_loss)
             print(msg)
             print(msg, file=flog, flush=True)
 
@@ -82,7 +82,7 @@ class TrainerPatchNet(Tracker):
             torch.save(self.net.state_dict(), net_path)
 
             val_loss, val_metric = self.run_epoch(val_dataloader, train_flag=False)
-            msg = 'Epoch: {} Val Loss: {:.5f}, Accuracy {:.5f}'.format(epoch, val_loss, val_metric)
+            msg = 'Epoch: {} Val Loss: {:.5f}'.format(epoch, val_loss)
             print(msg)
             print(msg, file=flog, flush=True)
 
@@ -93,9 +93,6 @@ class TrainerPatchNet(Tracker):
             loss, tp = self.train_step(batch, train_flag=train_flag)
             total_loss += loss
             tps += tp
-            if tp < 0.5:
-                show_image(batch[0][0].cpu().numpy(), batch[2][0].cpu().numpy(), fig_n=it*2)
-                show_image(batch[1][0].cpu().numpy(), batch[3][0].cpu().numpy(), fig_n=it*2+1)
         avg_loss = total_loss / len(dataloader)
         avg_tps = tps / len(dataloader)
         return avg_loss, avg_tps
