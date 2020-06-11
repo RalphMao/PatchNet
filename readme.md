@@ -2,6 +2,10 @@
 
 This repo contains PatchNet model description in PyTorch and its training/evaluation with SiameseFC. It heavily relies on [siamfc-pytorch]([https://github.com/huanglianghua/siamfc-pytorch](https://github.com/huanglianghua/siamfc-pytorch)).
 
+<p align="center">
+<img src=fig/surfer.gif width="800">
+</p>
+
 ## Prerequisite
 
 * Python 3
