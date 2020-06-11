@@ -20,7 +20,7 @@ This repo contains PatchNet model description in PyTorch and its training/evalua
 <img src=fig/surfer.gif>
 </p>
 
-The the animation above, left side window shows the performance of PatchNet when we are skipping every other 4 frames; Middle window shows the performance of PatchNet and SiameseFC combined model; Where the right side window shows the original performance of SiameseFC. All three profiling are tested with PyTorch-1.4 on Jetson Nano with a quad-core ARM Cortex-A57 CPU and 128-core Maxwell GPU.
+To describe the animation above, left side window shows the performance of PatchNet when we are skipping every other 4 frames; Middle window shows the performance of PatchNet and SiameseFC combined model; Where the right side window shows the original performance of SiameseFC. All three profiling are tested with PyTorch-1.4 on Jetson Nano with a quad-core ARM Cortex-A57 CPU and 128-core Maxwell GPU.
 
 <p align="center">
 <img src=fig/speed_vs_flops.jpg>
