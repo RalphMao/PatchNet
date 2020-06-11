@@ -59,13 +59,21 @@ Here we provide the pretrained model of PatchNet and SiameseFC.
 
 ### PatchNet
 
+```
+URL + table of performance?
+```
+
 ### Siamfc
+
+```
+URL + table of performance?
+```
 
 ## Testing Pretrained Models
 
 For example, to test the downloaded pretrained models on SiameseFC, one can run
 
 ```
-placeholder
+placeholder for sample running command
 ```
 
