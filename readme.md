@@ -60,13 +60,13 @@ Here we provide the pretrained model of PatchNet and SiameseFC.
 ### PatchNet
 
 ```
-URL + table of performance?
+URL 
 ```
 
 ### Siamfc
 
 ```
-URL + table of performance?
+URL 
 ```
 
 ## Testing Pretrained Models
